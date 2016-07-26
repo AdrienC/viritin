@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -284,7 +285,7 @@ public abstract class AbstractElementCollection<ET> extends CustomField<Collecti
         }
     }
 
-    private final Map<ET, EditorStuff> pojoToEditor = new HashMap<ET, EditorStuff>();
+    private final Map<ET, EditorStuff> pojoToEditor = new IdentityHashMap<ET, EditorStuff>();
 
     protected final MBeanFieldGroup<ET> getFieldGroupFor(ET pojo) {
         EditorStuff es = pojoToEditor.get(pojo);
@@ -302,8 +303,7 @@ public abstract class AbstractElementCollection<ET> extends CustomField<Collecti
     protected final Component getComponentFor(ET pojo, String property) {
         EditorStuff editorsstuff = pojoToEditor.get(pojo);
         if (editorsstuff == null) {
-            Object o = null;
-            o = createEditorInstance();
+            Object o = createEditorInstance();
             MBeanFieldGroup bfg = BeanBinder.bind(pojo, o).withEagerValidation(
                     fieldGroupListener);
             editorsstuff = new EditorStuff(bfg, o);
